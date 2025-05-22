@@ -1,0 +1,6 @@
+gcloud compute forwarding-rules create jenkins-psc-endpoint \
+    --region=CLUSTER_REGION \
+    --network=CONSUMER_VPC_NAME \
+    --target-service-attachment=projects/PRODUCER_PROJECT_ID/regions/CLUSTER_REGION/serviceAttachments/jenkins-psc-attachment
+
+gcloud compute forwarding-rules describe jenkins-psc-endpoint --region=CLUSTER_REGION
