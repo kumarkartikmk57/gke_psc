@@ -1,8 +1,15 @@
 gcloud compute forwarding-rules list
 gcloud compute backend-services describe a3f02d40e4e164f96a2a9cf1c43e9a3a --region=europe-west1 --format="get(selfLink)"
-gcloud compute networks subnets create psc-nat-subnet --network=YOUR_VPC_NAME --region=CLUSTER_REGION --range=10.0.0.0/24
-gcloud compute forwarding-rules list --filter="IP_ADDRESS=10.164.0.5"
-gcloud compute service-attachments create jenkins-psc-attachment --region=CLUSTER_REGION --producer-forwarding-rule=FORWARDING_RULE_NAME \
-    --connection-preference=ACCEPT_AUTOMATIC \
-    --nat-subnets=psc-nat-subnet \
-    --enable-proxy-protocol
+gcloud compute networks subnets create psc-nat-subnet --network=YOUR_VPC_NAME --region=CLUSTER_REGION --range=10.0.0.0/24 -purpose=PRIVATE_SERVICE_CONNECT
+#gcloud compute forwarding-rules list --filter="IP_ADDRESS=10.164.0.5"
+#producer forwarding rule name constructor
+#https://compute.googleapis.com/compute/v1/projects/<PROJECT_ID>/regions/<REGION>/forwardingRules/<FORWARDING_RULE_NAME>
+#eg: 
+gcloud compute service-attachments create flask-psc-attachment \
+  --region=europe-west1 \
+  --producer-forwarding-rule=https://compute.googleapis.com/compute/v1/projects/consumerproject-460604/regions/europe-west1/forwardingRules/a3f02d40e4e164f96a2a9cf1c43e9a3a \
+  --connection-preference=ACCEPT_AUTOMATIC \
+  --nat-subnets=psc-flask-subnet \
+
+#publish url will look like this
+projects/consumerproject-460604/regions/europe-west1/serviceAttachments/flask-psc-attachment

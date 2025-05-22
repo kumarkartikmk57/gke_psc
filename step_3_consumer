@@ -1,6 +1,22 @@
+gcloud service-directory namespaces create \
+  tempcommand \
+  --location=europe-west1
+
+
 gcloud compute forwarding-rules create jenkins-psc-endpoint \
     --region=CLUSTER_REGION \
     --network=CONSUMER_VPC_NAME \
     --target-service-attachment=projects/PRODUCER_PROJECT_ID/regions/CLUSTER_REGION/serviceAttachments/jenkins-psc-attachment
 
 gcloud compute forwarding-rules describe jenkins-psc-endpoint --region=CLUSTER_REGION
+
+
+
+gcloud compute forwarding-rules create temp \
+    --region=europe-west1 \
+    --network=default \
+    --network-tier=PREMIUM \
+    --address=10.132.0.4 \
+    --target-service-attachment=projects/consumerproject-460604/regions/europe-west1/serviceAttachments/flask-psc-attachment \
+    --allow-psc-global-access \
+    --labels=environment=dev,purpose=psc-test # Example labels - replace as needed
